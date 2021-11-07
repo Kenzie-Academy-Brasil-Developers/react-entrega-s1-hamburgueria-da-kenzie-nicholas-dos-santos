@@ -3,8 +3,8 @@
   flex-direction: row;
   box-sizing: border-box;
   overflow: auto;
-  padding: 0px;
-  margin: 0px;
+  width: 100vw;
+  margin: 0;
 }
 
 @media (min-width: 700px) {

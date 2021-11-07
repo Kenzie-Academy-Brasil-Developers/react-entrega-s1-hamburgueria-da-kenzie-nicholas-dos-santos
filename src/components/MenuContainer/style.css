@@ -1,9 +1,24 @@
 .Store {
   display: flex;
   flex-direction: row;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-around;
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 0px;
+  margin: 0px;
+}
 
-  padding: 10%;
+@media (min-width: 700px) {
+  .Store {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 1200px) {
+  .Store {
+    width: 1000px;
+  }
 }

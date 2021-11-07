@@ -1,7 +1,8 @@
 import { render } from "@testing-library/react";
 import "./App.css";
 import MenuContainer from "./components/MenuContainer";
-import Product from "./components/Product";
+import Navbar from "./components/Navbar";
+import ShoppingCart from "./components/ShoppingCart";
 import { useState } from "react";
 
 //Responsável por centralizar
@@ -58,48 +59,63 @@ function App() {
   const [cartTotal, setCartTotal] = useState(0);
 
   function showProducts(userInput) {
-    //Responsável por filtrar (use o método filter)
-    //e mostrar apenas os produtos com o mesmo texto escrito no input.
-    const result = products.filter((product) => product.id === userInput);
+    const result = products.filter(
+      (product) =>
+        product.name
+          .toLocaleLowerCase()
+          .includes(userInput.toLocaleLowerCase()) ||
+        product.category
+          .toLocaleLowerCase()
+          .includes(userInput.toLocaleLowerCase())
+    );
     setFilteredProducts(result);
   }
 
   function handleClick(productId) {
-    //Esta função deve receber por parâmetro o id e usar o método find para encontrar o
-    //item no array com o mesmo id do produto e será responsável por adicionar o produto selecionado no state currentSale.
-    //Crie um elemento JSX e use o método reduce para mostra o total da venda.
+    const soldItem = products.find((product) => product.id === productId);
 
-    setCurrentSale([...currentSale, productId]);
+    if (!currentSale.includes(soldItem)) {
+      setCurrentSale([...currentSale, soldItem]);
+      setCartTotal(
+        currentSale.reduce((a, b) => a + b.price, soldItem.price).toFixed(2)
+      );
+    }
+  }
 
-    const total = currentSale.reduce((a, b) => a.price + b.price, 0);
+  function removeItem(productId, productPrice) {
+    const newArr = currentSale.filter((product) => product.id !== productId);
+    setCurrentSale(newArr);
+    setCartTotal((cartTotal - productPrice).toFixed(2));
+  }
 
-    setCartTotal(cartTotal + total);
+  function removeAll(productId) {
+    setCurrentSale([]);
+    setCartTotal(0);
   }
 
   return (
     <div className="App">
-      {filteredProducts.length < 1 ? (
-        <MenuContainer products={products} />
-      ) : (
-        <MenuContainer products={filteredProducts} />
-      )}
+      <Navbar showProducts={showProducts} />
+      <div className="divContainer">
+        {filteredProducts.length < 1 ? (
+          <MenuContainer products={products} handleClick={handleClick} />
+        ) : (
+          <MenuContainer
+            products={filteredProducts}
+            handleClick={handleClick}
+          />
+        )}
+        <ShoppingCart
+          cartTotal={cartTotal}
+          currentSale={currentSale}
+          removeItem={removeItem}
+          removeAll={removeAll}
+        />
+      </div>
     </div>
   );
 }
 
-// Pai diplay row
-//nav
-//pai da dos outros dois componentes
-//ctálogo
-//carrinho
+//Botão de remover itens da sacola
 
 export default App;
-
-/*PERGUNTAS
-1- Como passar parâmetros de uma função em JSX? ("() => ")
-2 - Como passa props para um componente que está dentro de um outro component? (JÁ FIZ ISSO NOS DOIS COMPONENTS)
-3 - É possível aplicar estilziação de forma automatizada pelo figma? (FAZER CLASSNAME E IR ESTILIZANDO)
-4 - Como funciona a função render(), como aplicar JSX corretamente? (tanto faz render ou return)
-5 - Devo chamar as callbacks através de const? (JÁ RESOLVIDO - CONST)
-6 - Input do usuário será dado aonde? No header? (FAZER MENUNAV)
-*/

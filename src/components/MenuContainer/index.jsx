@@ -1,12 +1,11 @@
 import Product from "../Product";
 import "./style.css";
-//Responsável por renderizar a lista de produtos;
 
-function MenuContainer({ products }) {
+function MenuContainer({ products, handleClick }) {
   return (
     <div className="Store">
       {products.map((product) => (
-        <Product product={product} />
+        <Product product={product} handleClick={handleClick} />
       ))}
     </div>
   );
